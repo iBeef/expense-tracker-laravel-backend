@@ -51508,8 +51508,8 @@ react_dom__WEBPACK_IMPORTED_MODULE_2___default.a.render(react__WEBPACK_IMPORTED_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /var/www/html/expense-tracker-laravel-backend/resources/js/index.js */"./resources/js/index.js");
-module.exports = __webpack_require__(/*! /var/www/html/expense-tracker-laravel-backend/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /Users/ibeef/Programming/Web_Dev/PHP_Sites/expense-tracker-react-laravel-backend/resources/js/index.js */"./resources/js/index.js");
+module.exports = __webpack_require__(/*! /Users/ibeef/Programming/Web_Dev/PHP_Sites/expense-tracker-react-laravel-backend/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
