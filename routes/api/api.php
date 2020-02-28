@@ -18,4 +18,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::prefix('transactions')
+     ->namespace('Api')
      ->group(base_path('routes/api/transactions.php'));

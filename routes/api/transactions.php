@@ -13,7 +13,8 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/', 'Api\TransactionsController@index');
+// Route::get('/', 'Api\TransactionsController@index');
+Route::get('/', 'TransactionsController@index');
 
 Route::get('/test', function() {
     return "Hello";
