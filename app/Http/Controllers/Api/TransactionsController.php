@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 // use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use App\Transaction;
 
@@ -16,14 +17,19 @@ class TransactionsController extends Controller
      */
     public function index()
     {
-        $transactions = Transaction::all();
-        $count = count($transactions);
-        var_dump($count);
-        return response()->json([
-            'success' => true,
-            'count' => $count,
-            'data' => $transactions
-        ]);
+        if($transactions = Transaction::all()) {
+            $count = count($transactions);
+            return response()->json([
+                'success' => true,
+                'count' => $count,
+                'data' => $transactions
+            ]);
+        } else {
+            response()->json([
+                'success' => false,
+                'error' => 'Server Error'
+            ], 500);
+        }
     }
 
     /**
@@ -33,8 +39,29 @@ class TransactionsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        return "STORE Transactions";
+    {   
+        $rules = [
+            'text' => 'required|max:255',
+            'amount' => 'required|numeric'
+        ];
+        $customMessages = [
+            'text.required' => "Please add some text",
+            'amount.required' => "Please add a positive or negative number",
+        ];
+        $validator = Validator::make($request->all(), $rules, $customMessages);
+
+        if(!$validator->fails()) {
+            $transaction = new Transaction;
+            $transaction->text = $validator->validated()['text'];
+            $transaction->amount = $validator->validated()['amount'];
+            $transaction->save();
+            return response()->json([
+                'success' => true,
+                'data' => $transaction->toArray()
+            ], 201);
+        } else {
+            return "Failed";
+        }
     }
 
     /**
