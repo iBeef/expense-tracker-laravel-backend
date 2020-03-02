@@ -40,27 +40,37 @@ class TransactionsController extends Controller
      */
     public function store(Request $request)
     {   
-        $rules = [
-            'text' => 'required|max:255',
-            'amount' => 'required|numeric'
-        ];
-        $customMessages = [
-            'text.required' => "Please add some text",
-            'amount.required' => "Please add a positive or negative number",
-        ];
-        $validator = Validator::make($request->all(), $rules, $customMessages);
+        try {
+            $rules = [
+                'text' => 'required|max:255',
+                'amount' => 'required|numeric'
+            ];
+            $customMessages = [
+                'text.required' => "Please add some text",
+                'amount.required' => "Please add a positive or negative number",
+            ];
+            $validator = Validator::make($request->all(), $rules, $customMessages);
 
-        if(!$validator->fails()) {
-            $transaction = new Transaction;
-            $transaction->text = $validator->validated()['text'];
-            $transaction->amount = $validator->validated()['amount'];
-            $transaction->save();
-            return response()->json([
-                'success' => true,
-                'data' => $transaction->toArray()
-            ], 201);
-        } else {
-            return "Failed";
+            if(!$validator->fails()) {
+                $transaction = new Transaction;
+                $transaction->text = $validator->validated()['text'];
+                $transaction->amount = $validator->validated()['amount'];
+                $transaction->save();
+                return response()->json([
+                    'success' => true,
+                    'data' => $transaction->toArray()
+                ], 201);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'error' => $validator->errors()
+                ], 400);
+            }
+        } catch(Exception $e) {
+            response()->json([
+                'success' => false,
+                'error' => 'Server Error'
+            ], 500);
         }
     }
 
