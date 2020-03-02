@@ -12,4 +12,4 @@ Route::get('/', 'TransactionsController@index');
 
 Route::post('/', 'TransactionsController@store');
 
-Route::delete('/', 'TransactionsController@index');
+Route::delete('/{id}', 'TransactionsController@destroy');

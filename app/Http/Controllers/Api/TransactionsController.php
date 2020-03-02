@@ -81,8 +81,14 @@ class TransactionsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
-        return "DELETE Transactions";
+    {   
+        $id = 1;
+        $transaction = Transaction::find($id);
+        if($transaction) {
+            return "found";
+        } else {
+            return "not found";
+        }
     }
 
     /**
