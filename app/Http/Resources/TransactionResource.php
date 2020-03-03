@@ -21,6 +21,12 @@ class TransactionResource extends JsonResource
         ];
     }
 
+    /**
+     * Adds additional data to JSON response.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
     public function with($request) {
         return [
             'success'=> true
