@@ -19,7 +19,6 @@ class TransactionResource extends JsonResource
             'text' => $this->text,
             'amount' => $this->amount
         ];
-        // return var_dump($this);
     }
 
     public function with($request) {

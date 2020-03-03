@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\TransactionResource;
 use App\Transaction;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+// use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TransactionsController extends Controller
 {
@@ -20,19 +20,21 @@ class TransactionsController extends Controller
      */
     public function index()
     {
-        if($transactions = Transaction::all()) {
-            $count = count($transactions);
-            return response()->json([
-                'success' => true,
-                'count' => $count,
-                'data' => $transactions
-            ]);
-        } else {
-            response()->json([
-                'success' => false,
-                'error' => 'Server Error'
-            ], 500);
-        }
+        // if($transactions = Transaction::all()) {
+        //     $count = count($transactions);
+        //     return response()->json([
+        //         'success' => true,
+        //         'count' => $count,
+        //         'data' => $transactions
+        //     ]);
+        // } else {
+        //     response()->json([
+        //         'success' => false,
+        //         'error' => 'Server Error'
+        //     ], 500);
+        // }
+        return TransactionResource::collection(Transaction::all());
+
     }
 
     /**
@@ -100,17 +102,12 @@ class TransactionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, $id)
-    {   
-        // return $request->path();
-        try {
-            $transaction = Transaction::findOrFail($id);
-            // return new TransactionResource(Transaction::find($id));
-        } catch(ModelNotFoundException $e) {
-            return "Caught";
-        } catch(NotFoundHttpException $e) {
-            return "caught";
-        }
+    // public function show($id)
+    public function show(Transaction $transaction)
+    {
+        // var_dump($transaction);
+        // return new TransactionResource(Transaction::findOrFail($id));
+        return new TransactionResource($transaction);
     }
 
     /**
