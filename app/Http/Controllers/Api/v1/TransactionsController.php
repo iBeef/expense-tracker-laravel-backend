@@ -1,12 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\v1;
 
 use Illuminate\Http\Request;
 // use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\TransactionResource;
 use App\Transaction;
+
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TransactionsController extends Controller
 {
@@ -97,10 +100,18 @@ class TransactionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    // public function show($id)
-    // {
-    //     //
-    // }
+    public function show(Request $request, $id)
+    {   
+        // return $request->path();
+        try {
+            $transaction = Transaction::findOrFail($id);
+            // return new TransactionResource(Transaction::find($id));
+        } catch(ModelNotFoundException $e) {
+            return "Caught";
+        } catch(NotFoundHttpException $e) {
+            return "caught";
+        }
+    }
 
     /**
      * Show the form for editing the specified resource.

@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 
 Route::get('/', 'TransactionsController@index');
 
+Route::get('/{id}', 'TransactionsController@show');
+
 Route::post('/', 'TransactionsController@store');
 
 Route::delete('/{id}', 'TransactionsController@destroy');

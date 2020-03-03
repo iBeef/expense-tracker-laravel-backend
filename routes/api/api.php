@@ -17,6 +17,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::prefix('transactions')
-     ->namespace('Api')
-     ->group(base_path('routes/api/transactions.php'));
+Route::prefix('v1')
+     ->group(base_path('routes/api/v1/apiV1.php'));
+
+Route::fallback(function() {
+    return response()->json([
+        'success' => false,
+        'error' => "Page not found: If this problem persists, please contact an administrator."
+    ]);
+});
