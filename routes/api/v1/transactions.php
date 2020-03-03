@@ -14,4 +14,4 @@ Route::get('/{transaction}', 'TransactionsController@show');
 
 Route::post('/', 'TransactionsController@store');
 
-Route::delete('/{id}', 'TransactionsController@destroy');
+Route::delete('/{transaction}', 'TransactionsController@destroy');

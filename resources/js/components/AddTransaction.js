@@ -12,12 +12,17 @@ export const AddTransaction = () => {
     e.preventDefault();
 
     const newTransaction = {
-      id: Math.floor(Math.random() * 100000000),
+      // Id created by MYSQL so not needed here
+      // id: Math.floor(Math.random() * 100000000),
       text,
       amount: +amount
     }
 
     addTransaction(newTransaction);
+
+    // Reset values
+    setText('');
+    setAmount(0);
   }
 
   return (

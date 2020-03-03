@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TransactionResource;
+use App\Http\Resources\TransactionsCollection;
 use App\Transaction;
 
 // use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -20,21 +21,7 @@ class TransactionsController extends Controller
      */
     public function index()
     {
-        // if($transactions = Transaction::all()) {
-        //     $count = count($transactions);
-        //     return response()->json([
-        //         'success' => true,
-        //         'count' => $count,
-        //         'data' => $transactions
-        //     ]);
-        // } else {
-        //     response()->json([
-        //         'success' => false,
-        //         'error' => 'Server Error'
-        //     ], 500);
-        // }
-        return TransactionResource::collection(Transaction::all());
-
+        return new TransactionsCollection(Transaction::all());
     }
 
     /**
@@ -45,37 +32,30 @@ class TransactionsController extends Controller
      */
     public function store(Request $request)
     {   
-        try {
-            $rules = [
-                'text' => 'required|max:255',
-                'amount' => 'required|numeric'
-            ];
-            $customMessages = [
-                'text.required' => "Please add some text",
-                'amount.required' => "Please add a positive or negative number",
-            ];
-            $validator = Validator::make($request->all(), $rules, $customMessages);
+        $rules = [
+            'text' => 'required|max:255',
+            'amount' => 'required|numeric'
+        ];
+        $customMessages = [
+            'text.required' => "Please add some text",
+            'amount.required' => "Please add a positive or negative number",
+        ];
+        $validator = Validator::make($request->all(), $rules, $customMessages);
 
-            if(!$validator->fails()) {
-                $transaction = new Transaction;
-                $transaction->text = $validator->validated()['text'];
-                $transaction->amount = $validator->validated()['amount'];
-                $transaction->save();
-                return response()->json([
-                    'success' => true,
-                    'data' => $transaction->toArray()
-                ], 201);
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'error' => $validator->errors()
-                ], 400);
-            }
-        } catch(Exception $e) {
-            response()->json([
+        if(!$validator->fails()) {
+            $validated = $validator->validated();
+            $transaction = new Transaction;
+            $transaction->text = $validated['text'];
+            $transaction->amount = $validated['amount'];
+            $transaction->save();
+            return (new TransactionResource($transaction))
+                ->response()
+                ->setStatusCode(201);
+        } else {
+            return response()->json([
                 'success' => false,
-                'error' => 'Server Error'
-            ], 500);
+                'error' => $validator->errors()
+            ], 400);
         }
     }
 
@@ -85,15 +65,13 @@ class TransactionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Transaction $transaction)
     {   
-        $id = 1;
-        $transaction = Transaction::find($id);
-        if($transaction) {
-            return "found";
-        } else {
-            return "not found";
-        }
+        Transaction::destroy($transaction->id);
+        return response()->json([
+            'success' => true,
+            'data' => []
+        ]);
     }
 
     /**
@@ -102,11 +80,8 @@ class TransactionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    // public function show($id)
     public function show(Transaction $transaction)
     {
-        // var_dump($transaction);
-        // return new TransactionResource(Transaction::findOrFail($id));
         return new TransactionResource($transaction);
     }
 
